@@ -22,6 +22,7 @@ class Task {
 
     generateTask() {
         this.retrieve_settings();
+        this.success = false;
         if (this.chord) {
             this.generateChord();
         } else {
@@ -119,14 +120,23 @@ class Task {
      * Checks if activeKeys fulfill current task
      */
     checkActiveKeys() {
+        let failed = false;
         this.activeKeys.forEach( key => {
-            if (!(key in this.solution)) {
+            if (!(this.solution.includes(key))) {
                 this.result_fail();
-                return;
+                console.log("failed key: "+key);
+                failed = true;
             }
         });
+        if (failed) {
+            console.log("should have pressed: "+this.solution);
+            console.log("actually pressed: "+this.activeKeys);
+            return;
+        }
         if (this.activeKeys.length == this.solution.length) {
             if (Date.now() - this.starttime <= 500) {
+                console.log(this.solution);
+                console.log(this.activeKeys);
                 this.result_success();
                 return;
             } else {

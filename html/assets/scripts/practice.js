@@ -23,6 +23,7 @@ class Task {
     generateTask() {
         this.retrieve_settings();
         this.success = false;
+
         if (this.chord) {
             this.generateChord();
         } else {
@@ -137,6 +138,7 @@ class Task {
             if (Date.now() - this.starttime <= 500) {
                 console.log(this.solution);
                 console.log(this.activeKeys);
+
                 this.result_success();
                 return;
             } else {

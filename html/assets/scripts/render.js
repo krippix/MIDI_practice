@@ -46,10 +46,8 @@ class Notation {
 
         to_set.forEach( note => {
             if (note.clef == "treble") {
-                console.log("amogus");
                 this.notesTop.push(new Vex.Flow.StaveNote(note));
             } else {
-                console.log("amogus");
                 this.notesBottom.push(new Vex.Flow.StaveNote(note));
             }
         });

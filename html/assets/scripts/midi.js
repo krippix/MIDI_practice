@@ -2,11 +2,9 @@
 var keyboard = document.getElementById("piano");
 var svgDoc; // loaded keyboard svg
 const keysB = [2,5,7,10,12,14,17,19,22,24,26,29,31,34,36,38,41,43,46,48,50,53,55,58,60,62,65,67,70,72,74,77,79,82,84,86]
-const keyTo = {}
 
 window.addEventListener("load", function() {
     svgDoc = keyboard.contentDocument;
-    console.log("image loaded");
 }, false)
 
 // press or unpress keyboard button
@@ -22,14 +20,10 @@ function setKeyState(note, state) {
     }
 }
 
-
 // Check if browser supports MIDI
-if (navigator.requestMIDIAccess) {
-    console.log('This browser supports WebMIDI!');
-} else {
-    console.log('WebMIDI is not supported in this browser.');
+if (!navigator.requestMIDIAccess) {
+    console.log('WebMIDI is not supported in this browser. Or Site was not opened via HTTPS');
 }
-
 
 // Attempt to establish a connection to the MIDI device
 navigator.requestMIDIAccess()

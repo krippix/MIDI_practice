@@ -2,14 +2,44 @@ const { Renderer, Stave, StaveNote, Voice, Formatter, TickContext } = Vex.Flow;
 
 class Notation {
     constructor() {
-        // Create an SVG renderer and attach it to the DIV element
-        this.div = document.getElementById("note-render");
-        this.renderer = new Renderer(this.div, Renderer.Backends.SVG);
+        // init notelist
+        this.notesTop    = [];
+        this.notesBottom = [];
 
-        // Configure the rendering context.
-        this.renderer.resize(321, 500);
-        this.ctx = this.renderer.getContext();
+        // create voice
+        this.voiceTop    = new Vex.Flow.Voice({num_beats: 4, beat_value: 4, resolution: Vex.Flow.RESOLUTION});
+        this.voiceBottom = new Vex.Flow.Voice({num_beats: 4, beat_value: 4, resolution: Vex.Flow.RESOLUTION});
 
+        this.draw();
+    }
+    /**
+     * Takes list of notes ex: [{clef: "bass/treble", keys: ["c/4,"e/4"], duration: "w"},{clef: "bass/treble", keys: ["c/4,"e/4"], duration: "w"}]
+     * @param {Array[Noteset]} notes 
+     */
+    set_notes(to_set) {
+        // create voice
+        this.voiceTop    = new Vex.Flow.Voice({num_beats: 4, beat_value: 4, resolution: Vex.Flow.RESOLUTION});
+        this.voiceBottom = new Vex.Flow.Voice({num_beats: 4, beat_value: 4, resolution: Vex.Flow.RESOLUTION});
+        //this.voiceTop.tickables    = [];
+        //this.voiceBottom.tickables = [];
+
+        this.notesTop    = [];
+        this.notesBottom = [];
+
+        to_set.forEach( note => {
+            if (note.clef == "treble") {
+                this.notesTop.push(note.staveNote);
+            } else {
+                this.notesBottom.push(note.staveNote);
+            }
+        });
+
+        this.voiceTop.addTickables(this.notesTop);
+        this.voiceBottom.addTickables(this.notesBottom);
+        this.draw();
+    }
+
+    draw() {
         // Create the staves 
         this.topStaff = new Vex.Flow.Stave(20, 100, 300);
         this.bottomStaff = new Vex.Flow.Stave(20, 200, 300);
@@ -22,49 +52,17 @@ class Notation {
         this.brace     = new Vex.Flow.StaveConnector(this.topStaff, this.bottomStaff).setType(3); // 3 = brace
         this.lineLeft  = new Vex.Flow.StaveConnector(this.topStaff, this.bottomStaff).setType(1);
         this.lineRight = new Vex.Flow.StaveConnector(this.topStaff, this.bottomStaff).setType(6);
+        
+        // Create an SVG renderer and attach it to the DIV element
+        this.div = document.getElementById("note-render");
+        this.div.innerHTML = "";
 
-        // create voice
-        this.voiceTop    = new Vex.Flow.Voice({num_beats: 4, beat_value: 4, resolution: Vex.Flow.RESOLUTION});
-        this.voiceBottom = new Vex.Flow.Voice({num_beats: 4, beat_value: 4, resolution: Vex.Flow.RESOLUTION});
+        this.renderer = new Renderer(this.div, Renderer.Backends.SVG);
 
-        // init notelist
-        this.notesTop    = [];
-        this.notesBottom = [];
+        // Configure the rendering context.
+        this.renderer.resize(321, 500);
+        this.ctx = this.renderer.getContext();
 
-        this.draw();
-    }
-    /**
-     * Takes list of notes ex: [{clef: "bass/treble", keys: ["c/4,"e/4"], duration: "w"},{clef: "bass/treble", keys: ["c/4,"e/4"], duration: "w"}]
-     * @param {*} notes 
-     */
-    set_notes(to_set) {
-        this.voiceTop.tickables    = [];
-        this.voiceBottom.tickables = [];
-
-        this.notesTop    = [];
-        this.notesBottom = [];
-
-        to_set.forEach( note => {
-            if (note.clef == "treble") {
-                this.notesTop.push(new Vex.Flow.StaveNote(note));
-            } else {
-                this.notesBottom.push(new Vex.Flow.StaveNote(note));
-            }
-        });
-
-        for (let note of this.notesTop) {
-            note.x_shift = 100;
-        }
-        for (let note of this.notesBottom) {
-            note.x_shift = 100;
-        }
-
-        this.voiceTop.addTickables(this.notesTop);
-        this.voiceBottom.addTickables(this.notesBottom);
-        this.draw();
-    }
-
-    draw() {
         // draw background
         this.topStaff.setContext(this.ctx).draw();
         this.bottomStaff.setContext(this.ctx).draw();
@@ -86,12 +84,26 @@ class Notation {
 
 class Noteset {
     // syntax for notes: https://github.com/0xfe/vexflow/blob/master/src/tables.ts
+    /**
+     * 
+     * @param {String}        clef bass or treble
+     * @param {Array[String]} keys array of string
+     */
     constructor(clef, keys) {
         this.clef     = clef;
         this.keys     = keys;
-        this.duration = "w";
+        this.staveNote = new StaveNote({clef: clef, keys: keys, duration: "w"});
+        this.addAccidentals();
+    }
+    addAccidentals() {
+        for (var i=0; i < this.keys.length; i++) {
+            if (this.keys[i].includes("b")) {
+                this.staveNote.addModifier(new Vex.Flow.Accidental("b"),i)            
+            }
+            if (this.keys[i].includes("#")) {
+                this.staveNote.addModifier(new Vex.Flow.Accidental("#"),i);
+            }
+        }
+        //this.staveNote.setXShift(80);
     }
 }
-
-notator = new Notation();
-notator.set_notes([new Noteset("treble",["c/5","c/6"]),new Noteset("bass",["c/3"])]);

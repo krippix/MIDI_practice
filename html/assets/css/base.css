@@ -26,3 +26,8 @@ h1 {
     display: inline-block;
     margin: 0 auto;
 }
+.checkboxes {
+    font-family: 'arial';
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

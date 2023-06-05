@@ -10,7 +10,6 @@ window.addEventListener("load", function() {
 // press or unpress keyboard button
 function setKeyState(note, state) {
     let key = svgDoc.getElementById(String(note));
-    console.log(key);
     if (state) {
         key.style.fill = "red";
     } else if (keysB.includes(note)) {
@@ -50,13 +49,10 @@ function getMIDIMessage(midiMessage) {
         console.log(note);
         if (velocity == 0) {
             setKeyState(note, false);
+            task.changeKeyState(note,false);
         } else {
             setKeyState(note, true);
+            task.changeKeyState(note,true);
         }
     }
-
-    if (command == 144 && velocity != 0) {
-
-    } else if (command == 144 && velocity == 0)
-    console.log(command,note,velocity);
 }

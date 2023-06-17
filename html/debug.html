@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<head>
+    <title>MidiTrainer - DEBUG</title>
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/base.css">
+</head>
+<body>
+    <div class="container">
+        <div id="note-render"></div>
+        <div class="checkboxes">
+            <input type="checkbox" id="naturals" checked><label for="naturals">Natural</label>
+            <input type="checkbox" id="sharps"><label for="sharps">Sharps</label>
+            <input type="checkbox" id="flats"><label for="flats">Flats</label>
+            <input type="checkbox" id="extended"><label for="extended">Extended</label>
+        </div>
+        <object id="piano" data="assets/img/piano-keyboard.svg" type="image/svg+xml" width="100%" type="image/svg+xml"></object>
+    </div>
+    <div class="container" id="console">
+
+    </div>
+    <script>
+        (function () {
+            var old = console.log;
+            var logger = document.getElementById('console');
+            console.log = function (message) {
+                if (typeof message == 'object') {
+                    logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br />';
+                } else {
+                    logger.innerHTML += message + '<br />';
+                }
+            }
+        })();
+        console.log("Debug console started...");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vexflow@4.0.3/build/cjs/vexflow.js"></script>
+    <script src="assets/scripts/map.js"></script>
+    <script src="assets/scripts/render.js"></script>
+    <script src="assets/scripts/midi.js"></script>
+    <script src="assets/scripts/practice.js"></script>
+</body>

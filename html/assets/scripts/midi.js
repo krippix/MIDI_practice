@@ -30,9 +30,7 @@ function midiSetup() {
         return
     }
     // Attempt to establish a MIDI connection. Handle success or failure
-    console.log("1231234");
     window.navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
-    console.log("4321321");
 }
 
 /**
@@ -53,7 +51,6 @@ function onMIDISuccess(access) {
     // Add event listener do all devices
     for (var i = 0; i < input_list.length; i++) {
         input_list[i].onmidimessage = getMIDIMessage;
-        console.log("amogus");
     }
 
 }
@@ -72,7 +69,6 @@ function onMIDIFailure() {
  * @param {*} midiMessage 
  */
 function getMIDIMessage(midiMessage) {
-    console.log("sugoma");
     var command  = midiMessage.data[0];
     var note     = midiMessage.data[1] - 20; // sorry midi standard
     var velocity = (midiMessage.data.length > 2) ? midiMessage.data[2] : 0;

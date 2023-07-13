@@ -1,26 +1,20 @@
+html * {
+    font-family: 'arial';
+}
+
 body {
     margin: 0;
     background-color: #d3d3d3;
 }
-h1 {
-    margin: 0;
-}
-#titlebar {
-    font-family: 'arial';
-    color: white;
-    padding: 20px;
-    margin: 0px;
-    background-color: #333;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-}
 .container {
-    max-width: 1920px;
     background-color: white;
     padding: 1%;
     margin: 10px auto;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     display: flex;
+    justify-content: center;
     flex-direction: column;
+    z-index: 0;
 }
 #console {
     overflow-y: scroll;
@@ -30,8 +24,48 @@ h1 {
     display: inline-block;
     margin: 0 auto;
 }
-.checkboxes {
-    font-family: 'arial';
-    margin-top: 10px;
-    margin-bottom: 10px;
+#stats {
+    width: auto;
+    display: flex;
+    justify-content: center;
+}
+#table_holder {
+    width: 282px;
+}
+#table_holder td {
+    padding-right: 10px;
+    padding-bottom: 5px;
+    text-align: left;
+}
+.inputs {
+    margin: 10px 5px 10px 5px;
+}
+.inputs button {
+    float: right;
+}
+.message {
+    opacity: 0;
+    display: none;
+    height: 100px;
+    width: 200px;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+}
+#success {
+    color: green;
+}
+#failure {
+    color: red;
+}
+#piano_holder {
+    margin: 5px;
+    margin-top: 0px;
+    padding: 0px;
 }

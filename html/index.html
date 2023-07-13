@@ -6,15 +6,32 @@
     <link rel="stylesheet" href="assets/css/base.css">
 </head>
 <body>
+    <div class="message" id="success"><p><b>Sucess!</b></p></div>
+    <div class="message" id="failure"><p><b>Failed.</b></p></div>
     <div class="container">
         <div id="note-render"></div>
-        <div class="checkboxes">
+        <div id="stats">
+            <div id="table_holder">
+                <table>
+                    <tr>
+                        <td>Highest Streak:</td><td id="streak_highest"></td>
+                    </tr>
+                    <tr>
+                        <td>Current Streak:</td><td id="streak_current"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="inputs">
             <input type="checkbox" id="naturals" checked><label for="naturals">Natural</label>
             <input type="checkbox" id="sharps"><label for="sharps">Sharps</label>
             <input type="checkbox" id="flats"><label for="flats">Flats</label>
             <input type="checkbox" id="extended"><label for="extended">Extended</label>
+            <button id="skip">Skip</button>
         </div>
-        <object id="piano" data="assets/img/piano-keyboard.svg" type="image/svg+xml" width="100%" type="image/svg+xml"></object>
+        <div id="piano_holder">
+            <object id="piano" data="assets/img/piano-keyboard.svg" type="image/svg+xml" width="100%" type="image/svg+xml"></object>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vexflow@4.0.3/build/cjs/vexflow.js"></script>
     <script src="assets/scripts/map.js"></script>

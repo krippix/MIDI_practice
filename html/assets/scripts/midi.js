@@ -4,9 +4,7 @@ var svgDoc; // loaded keyboard svg
 var midiAccess = null;
 const black_keys = [2,5,7,10,12,14,17,19,22,24,26,29,31,34,36,38,41,43,46,48,50,53,55,58,60,62,65,67,70,72,74,77,79,82,84,86] 
 
-window.addEventListener("load", function() {
-    svgDoc = keyboard.contentDocument;
-}, false)
+window.addEventListener("load", () => { svgDoc = keyboard.contentDocument; }, false);
 
 // press or unpress keyboard button
 function setKeyState(note, state) {
@@ -88,4 +86,4 @@ function getMIDIMessage(midiMessage) {
 }
 
 // code executed on include
-window.onload = (x) => { midiSetup(); }
+window.onload = () => { midiSetup(); };

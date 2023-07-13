@@ -11,18 +11,21 @@ class Task {
     constructor() {
         this.render  = new Notation();
         this.retrieve_settings();
+        this.assignEvents();
 
-        this.solution   = [];   // keys to solve current problem
-        this.activeKeys = [];   // currently pressed keys
-        this.active     = true; // true while task can be solved
-        this.success    = false;
+        this.solution        = [];   // keys to solve current problem
+        this.activeKeys      = [];   // currently pressed keys
+        this.awaitKeyRelease = false; // blocks proceeding until all keys are released
+        this.solveStreak     = 0;
+        this.allTimeHigh     = 0;
 
+        this.initStats();
         this.generateTask();
     }
 
     generateTask() {
         this.retrieve_settings();
-        this.success = false;
+        this.failed = false;
 
         if (this.chord) {
             this.generateChord();
@@ -60,7 +63,6 @@ class Task {
         // pick from generated pool
         var randomResult = Math.floor(Math.random() * pickFrom.length);
         let chosenNote = pickFrom[randomResult];
-        this.solution = [chosenNote[1]];
 
         let clef = "";
 
@@ -73,6 +75,8 @@ class Task {
             clef = "treble";
         }
 
+        this.success = false;
+        this.awaitKeyRelease = false;
         this.solution = [chosenNote[1]];
         this.render.set_notes([new Noteset(clef, [chosenNote[0]])]);
     }
@@ -81,50 +85,56 @@ class Task {
 
     }
 
-    on_keyStateChange() {
-        if (this.active) {
-            this.checkActiveKeys();
-        } else {
-            console.log("Can't continue, still keys pressed.");
-            return;
-        }
-        if (this.success) {
-            this.generateTask();
-        } else if (this.activeKeys.length == 0) {
-            this.active = true;
-        }
-    }
-
     /**
-     * Keeps Track of pressed keys
+     * Updates the activeKeys array
      * @param {number}  key 
      * @param {boolean} state 
      */
     changeKeyState(key, state) {
         if (state) {
-            // start new timer
-            if (this.activeKeys.length == 0) {
-                this.active = true;
-                this.starttime = Date.now();
+            if (!this.activeKeys.includes(key)) {
+                this.activeKeys.push(key);
             }
-            this.activeKeys.push(key);
         } else {
             let index = this.activeKeys.indexOf(key);
             if (index != -1) {
                 this.activeKeys.splice(index, 1);
             }
         }
-        this.on_keyStateChange()
+        this.on_keyStateChange(state);
     }
 
     /**
-     * Checks if activeKeys fulfill current task
+     * triggered whenever activeKeys changes
+     * @param {*} state true if button was pressed, false if released
      */
-    checkActiveKeys() {
+    on_keyStateChange(state) {
+        // handle key releases
+        if (!state) {
+            if (this.activeKeys.length == 0) {
+                this.awaitKeyRelease = false;
+            }
+            return;
+        }
+        // await release of all keys
+        if (this.awaitKeyRelease) {
+            console.log("Can't continue, release all keys first.");
+            return;
+        }
+        // start timer on first pressed key
+        if (this.activeKeys.length == 1) {
+            this.starttime = Date.now();
+        }
+        this.is_failed();
+    }
+
+    /**
+     * Check if task was failed
+     */
+    is_failed() {
         let failed = false;
-        this.activeKeys.forEach( key => {
+        this.activeKeys.forEach((key) => {
             if (!(this.solution.includes(key))) {
-                this.result_fail();
                 console.log("failed key: "+key);
                 failed = true;
             }
@@ -132,32 +142,68 @@ class Task {
         if (failed) {
             console.log("should have pressed: "+this.solution);
             console.log("actually pressed: "+this.activeKeys);
+            this.on_failure();
             return;
         }
         if (this.activeKeys.length == this.solution.length) {
-            if (Date.now() - this.starttime <= 500) {
-                console.log(this.solution);
-                console.log(this.activeKeys);
-
-                this.result_success();
-                return;
-            } else {
-                this.result_fail();
-                return;
-            }
+            this.on_success();
         }
     }
 
-    result_fail() {
-        console.log("Wrong!");
-        this.active = false;
+    on_success() {
+        this.showMessage(true);
+        this.awaitKeyRelease = true;
+        this.updateStreak(true);
+        this.generateTask();
     }
 
-    result_success() {
-        console.log("Correct!");
-        this.solution = [];
-        this.active   = false;
-        this.success  = true;
+    on_failure() {
+        this.showMessage(false);
+        this.updateStreak(false);
+        this.awaitKeyRelease = true;
+    }
+
+    async showMessage(success) {
+        let target;
+        console.log("success amogus lel")
+        if (success) {
+            target = document.getElementById("success");
+        } else {
+            target = document.getElementById("failure");
+        }
+        target.style.opacity = 1;
+        target.style.display = "flex";
+        let fadeEffect = setInterval(() => {
+            if (target.style.opacity > 0) {
+                target.style.opacity -= 0.1;
+            } else {
+                target.style.display = "none";
+                clearInterval(fadeEffect);
+            }
+        }, 100);
+    }
+
+    /**
+     * 
+     * @param {*} success correct answer
+     */
+    updateStreak(success) {
+        if (success) {
+            this.solveStreak += 1;
+        } else {
+            this.solveStreak = 0;
+        }
+        document.getElementById("streak_current").innerHTML = this.solveStreak;
+
+        if (this.solveStreak >= this.allTimeHigh) {
+            this.allTimeHigh = this.solveStreak;
+            document.getElementById("streak_highest").innerHTML = this.allTimeHigh;
+        }
+    }
+
+    initStats() {
+        // TODO LOAD COOKIE DATA
+        this.updateStreak(false);
     }
 
     retrieve_settings() {
@@ -172,6 +218,13 @@ class Task {
         this.flat    = cbx_flats.checked;
         this.chord   = false;
         this.extend  = cbx_extended.checked;
+    }
+
+    assignEvents() {
+        document.getElementById("skip").addEventListener("click", () => {
+            this.updateStreak(false);
+            this.generateTask();
+        });
     }
 }
 

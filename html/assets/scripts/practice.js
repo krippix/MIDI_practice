@@ -135,13 +135,10 @@ class Task {
         let failed = false;
         this.activeKeys.forEach((key) => {
             if (!(this.solution.includes(key))) {
-                console.log("failed key: "+key);
                 failed = true;
             }
         });
         if (failed) {
-            console.log("should have pressed: "+this.solution);
-            console.log("actually pressed: "+this.activeKeys);
             this.on_failure();
             return;
         }
@@ -165,7 +162,6 @@ class Task {
 
     async showMessage(success) {
         let target;
-        console.log("success amogus lel")
         if (success) {
             target = document.getElementById("success");
         } else {
@@ -183,6 +179,7 @@ class Task {
         }, 100);
     }
 
+
     /**
      * 
      * @param {*} success correct answer
@@ -193,18 +190,20 @@ class Task {
         } else {
             this.solveStreak = 0;
         }
-        document.getElementById("streak_current").innerHTML = this.solveStreak;
+        document.getElementById("streak-current").innerHTML = this.solveStreak;
 
         if (this.solveStreak >= this.allTimeHigh) {
             this.allTimeHigh = this.solveStreak;
-            document.getElementById("streak_highest").innerHTML = this.allTimeHigh;
+            document.getElementById("streak-highest").innerHTML = this.allTimeHigh;
         }
     }
+
 
     initStats() {
         // TODO LOAD COOKIE DATA
         this.updateStreak(false);
     }
+
 
     retrieve_settings() {
         let cbx_naturals = document.getElementById("naturals");
@@ -227,6 +226,7 @@ class Task {
         });
     }
 }
+
 
 // Starts the task loop
 var task = new Task();

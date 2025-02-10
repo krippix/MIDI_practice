@@ -32,7 +32,7 @@ var nat_values = [
     ["B/5" ,63],
     ["C/6" ,64]
 ];
-var nat_values_ex = [
+const nat_values_ex = [
     ["A/0" , 1],
     ["B/0" , 3],
     ["C/1" , 4],
@@ -57,7 +57,7 @@ var nat_values_ex = [
     ["B/7" ,87],
     ["C/8", 88]
 ];
-var shp_values = [
+const shp_values = [
     ["C#/2",17],
     ["D#/2",19],
     ["E#/2",21],
@@ -88,7 +88,7 @@ var shp_values = [
     ["B#/5",64],
     ["C#/6",65]
 ];
-var shp_values_ex = [
+const shp_values_ex = [
     ["A#/0", 2],
     ["B#/0", 4],
     ["C#/1", 5],
@@ -112,7 +112,7 @@ var shp_values_ex = [
     ["A#/7",86],
     ["B#/7",88]
 ];
-var flt_values = [
+const flt_values = [
     ["Cb/2",15],
     ["Db/2",17],
     ["Eb/2",19],
@@ -143,7 +143,7 @@ var flt_values = [
     ["Bb/5",62],
     ["Cb/6",63]
 ];
-flt_values_ex = [
+const flt_values_ex = [
     ["Bb/0", 2],
     ["Cb/1", 3],
     ["Db/1", 5],

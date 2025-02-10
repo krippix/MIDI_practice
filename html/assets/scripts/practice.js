@@ -34,6 +34,22 @@ class Task {
         }
     }
 
+    chooseClef(note, g_clef, f_clef) {
+        if (note > 40) {
+            return "treble";
+        }
+
+        if (note < 40) {
+            return "bass";
+        }
+
+        if (g_clef && f_clef) {
+            return Math.random() < 0.5 ? "bass" : "treble";
+        }
+
+        return g_clef ? "treble" : "bass";
+    }
+
     generateNote() {
         let pickFrom = [];
 
@@ -60,20 +76,21 @@ class Task {
             }
         }
 
+        // Remove disabled clef(s)
+        let g_clef = document.getElementById("g-clef").checked;
+        if (!g_clef) {
+            pickFrom = pickFrom.filter( item => !(item[1] > 40));
+        }
+        let f_clef = document.getElementById("f-clef").checked;
+        if (!f_clef) {
+            pickFrom = pickFrom.filter( item => !(item[1] < 40));
+        }
+
         // pick from generated pool
         var randomResult = Math.floor(Math.random() * pickFrom.length);
         let chosenNote = pickFrom[randomResult];
 
-        let clef = "";
-
-        // choose clef
-        if (chosenNote[1] == 40) {
-            Math.random() < 0.5 ? clef = "bass" : clef = "treble";
-        } else if (chosenNote[1] < 40) {
-            clef = "bass";
-        } else {
-            clef = "treble";
-        }
+        let clef = this.chooseClef(chosenNote[1], g_clef, f_clef);
 
         this.success = false;
         this.awaitKeyRelease = false;
@@ -132,11 +149,18 @@ class Task {
      * Check if task was failed
      */
     is_failed() {
+        this.ignore_octave = document.getElementById("ignore-octave").checked;
         let failed = false;
         this.activeKeys.forEach((key) => {
-            if (!(this.solution.includes(key))) {
+            this.solution.forEach((x) => {
+                if (this.ignore_octave && (key % 12 == x % 12)) {
+                    return;
+                }
+                if (key == x) {
+                    return;
+                }
                 failed = true;
-            }
+            })
         });
         if (failed) {
             this.on_failure();
@@ -210,6 +234,7 @@ class Task {
         let cbx_sharps   = document.getElementById("sharps");
         let cbx_flats    = document.getElementById("flats");
         let cbx_extended = document.getElementById("extended");
+        let cbx_ignore_octave = document.getElementById("ignore-octave");
         
         this.keysig  = [0];
         this.natural = cbx_naturals.checked;
@@ -217,6 +242,7 @@ class Task {
         this.flat    = cbx_flats.checked;
         this.chord   = false;
         this.extend  = cbx_extended.checked;
+        this.ignore_octave = cbx_ignore_octave.checked;
     }
 
     assignEvents() {

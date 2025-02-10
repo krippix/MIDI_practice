@@ -1,48 +1,122 @@
 html * {
     font-family: 'arial';
 }
-
 body {
     margin: 0;
     background-color: #d3d3d3;
 }
-.container {
-    background-color: white;
-    padding: 1%;
-    margin: 10px auto;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+#main-container {
     display: flex;
-    justify-content: center;
-    flex-direction: column;
-    z-index: 0;
+    flex-direction: row;
+    justify-content: left;
+    background-color: white;
+    height: 100vh;
 }
+
+/* Sidebar */
+.sidebar {
+    display: flex;
+    container: sidebar / inline-size;
+    flex-direction: column;
+    background-color: #111;
+    color: #aaa;
+    width: 3rem;
+}
+.sidebar a {
+    color: white;
+    text-decoration: none;
+}
+.long-name {
+    display: none;
+}
+.inputs {
+    display: flex;
+    align-items: center;
+    height: 2rem;
+    margin: 0.5rem;
+}
+.inputs button {
+    background-color: #333;
+    color: #aaa;
+    padding: 0.25em;
+    border: none;
+}
+.inputs .section {
+    font-weight: bold;
+}
+.inputs select {
+    width: 100%;
+}
+#heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#title {
+    margin: 0.25rem 0.5rem;
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+#burger-size {
+    width: 2rem;
+    height: 2rem;
+    margin: 0.25rem 0.5rem;
+}
+#burger-icon {
+    pointer-events: none;
+}
+#burger-size:hover {
+    background-color: #222;
+}
+@container sidebar (width > 3rem) {
+    .short-name {
+        display: none;
+    }
+    .long-name {
+        display: block;
+    }
+    .top-border {
+        border-top: 1px solid #aaa;
+    }
+}
+
+/* Piano stuff */
 #console {
     overflow-y: scroll;
     max-height: 300px;
-}
-#note-render {
-    display: inline-block;
-    margin: 0 auto;
 }
 #stats {
     width: auto;
     display: flex;
     justify-content: center;
 }
-#table_holder {
-    width: 282px;
+#piano-container {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
 }
+#piano_holder {
+    flex-grow: 1;
+    margin: 5px;
+    margin-top: 0px;
+    padding: 0px;
+}
+#note-render {
+    display: flex;
+    justify-content: center;
+}
+
+/* Statistics */
 #table_holder td {
     padding-right: 10px;
     padding-bottom: 5px;
     text-align: left;
 }
-.inputs {
-    margin: 10px 5px 10px 5px;
+#streak-highest {
+    width: 4em;
 }
-.inputs button {
-    float: right;
-}
+
+/* Notifications */
 .message {
     opacity: 0;
     display: none;
@@ -63,9 +137,4 @@ body {
 }
 #failure {
     color: red;
-}
-#piano_holder {
-    margin: 5px;
-    margin-top: 0px;
-    padding: 0px;
 }
